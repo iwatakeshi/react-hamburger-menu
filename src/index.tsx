@@ -1,4 +1,4 @@
-import React, { HTMLAttributes } from "react";
+import React, { HTMLAttributes, CSSProperties } from "react";
 
 type OnBurgerMenuClickEvent =
   | ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void)
@@ -9,79 +9,67 @@ interface BurgerMenuProps extends HTMLAttributes<HTMLDivElement> {
   height?: number;
   open?: boolean;
   strokeWidth?: number;
-  rotation?: number;
+  rotate?: number;
   animationDuration?: number;
   color?: string;
   borderRadius?: number;
   onClick?: OnBurgerMenuClickEvent;
 }
 
-const transform3d = (
-  open: boolean,
-  position: number,
-  halfHeight: number,
-  rotation: number
-) => {
-  return `translate3d(0,${open ? halfHeight : position},0) rotate(${
-    open ? `${rotation}deg` : "0"
-  })`;
-};
+export const BurgerMenu: React.FC<BurgerMenuProps> = props => {
+  const width = `${props.width ?? 36}px`,
+    height = `${props.height ?? 30}px`,
+    halfHeight = `${(props.height ?? 30) / 2}px`,
+    open = props.open ?? false,
+    strokeWidth = props.strokeWidth ?? 2,
+    halfStrokeWidth = `-${strokeWidth / 2}px`,
+    animationDuration = props.animationDuration ?? 0.4;
 
-export const BurgerMenu: React.FC<BurgerMenuProps> = ({
-  open = false,
-  width = 36,
-  height = 30,
-  style,
-  strokeWidth = 2,
-  animationDuration = 0.4,
-  color = "#333",
-  rotation = 0,
-  borderRadius = 0,
-  ...props
-}) => {
-  const halfHeight = height / 2;
-  const halfStrokeWidth = -strokeWidth / 2;
+  const transform3d = (open: boolean, position: string, rotate: number) =>
+    `translate3d(0,${open ? halfHeight : position},0) rotate(${
+      open ? `${rotate}deg` : 0
+    })`;
 
   const styles = {
     container: {
       width,
       height,
       position: "relative",
-      transform: `rotate(${rotation}deg)`
-    } as React.CSSProperties | undefined,
+      transform: `rotate(${props.rotate ?? 0}deg)`
+    } as CSSProperties,
     lineBase: {
       display: "block",
       height: `${strokeWidth}px`,
       width: "100%",
-      background: color,
+      background: props.color ?? "#000",
       transitionTimingFunction: "ease",
       transitionDuration: `${animationDuration}s`,
-      borderRadius: `${borderRadius}px`,
+      borderRadius: `${props.borderRadius ?? 0}px`,
       transformOrigin: "center",
       position: "absolute"
-    } as React.CSSProperties | undefined,
+    } as CSSProperties,
     firstLine: {
-      transform: transform3d(open, halfHeight, 0, 45),
+      transform: transform3d(open, 0, 45),
       marginTop: halfStrokeWidth
-    } as React.CSSProperties | undefined,
+    } as CSSProperties,
     secondLine: {
       transitionTimingFunction: "ease-out",
       transitionDuration: `${animationDuration / 4}s`,
-      opacity: open ? "0" : "1",
+      opacity: open ? 0 : 1,
       top: halfHeight,
       marginTop: halfStrokeWidth
-    },
+    } as CSSProperties,
     thirdLine: {
-      transform: transform3d(open, halfHeight, height, -45),
+      transform: transform3d(open, height, -45),
       marginTop: halfStrokeWidth
-    } as React.CSSProperties | undefined
+    } as CSSProperties
   };
-
+  const { lineBase, firstLine, secondLine, thirdLine } = styles;
   return (
     <div style={styles.container} onClick={props.onClick}>
-      <span style={{ ...styles.lineBase, ...styles.firstLine }}></span>
-      <span style={{ ...styles.lineBase, ...styles.secondLine }}></span>
-      <span style={{ ...styles.lineBase, ...styles.thirdLine }}></span>
+      <span style={{ ...lineBase, ...firstLine }}></span>
+      <span style={{ ...lineBase, ...secondLine }}></span>
+      <span style={{ ...lineBase, ...thirdLine }}></span>
     </div>
   );
 };
