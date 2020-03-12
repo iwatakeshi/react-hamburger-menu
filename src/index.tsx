@@ -16,14 +16,22 @@ interface BurgerMenuProps extends HTMLAttributes<HTMLDivElement> {
   onClick?: OnBurgerMenuClickEvent;
 }
 
-export const BurgerMenu: React.FC<BurgerMenuProps> = props => {
-  const width = `${props.width ?? 36}px`,
-    height = `${props.height ?? 30}px`,
-    halfHeight = `${(props.height ?? 30) / 2}px`,
-    open = props.open ?? false,
-    strokeWidth = props.strokeWidth ?? 2,
-    halfStrokeWidth = `-${strokeWidth / 2}px`,
-    animationDuration = props.animationDuration ?? 0.4;
+export const BurgerMenu: React.FC<BurgerMenuProps> = ({
+  width: w = 36,
+  height: h = 30,
+  open = false,
+  strokeWidth = 2,
+  animationDuration = 0.4,
+  onClick = () => ({}),
+  rotate = 0,
+  color = "#333",
+  borderRadius = 0,
+  ...props
+}) => {
+  const width = `${w}px`,
+    height = `${h}px`,
+    halfHeight = `${h / 2}px`,
+    halfStrokeWidth = `-${strokeWidth / 2}px`;
 
   const transform3d = (open: boolean, position: string, rotate: number) =>
     `translate3d(0,${open ? halfHeight : position},0) rotate(${
@@ -35,21 +43,21 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = props => {
       width,
       height,
       position: "relative",
-      transform: `rotate(${props.rotate ?? 0}deg)`
+      transform: `rotate(${rotate ?? 0}deg)`
     } as CSSProperties,
     lineBase: {
       display: "block",
       height: `${strokeWidth}px`,
       width: "100%",
-      background: props.color ?? "#000",
+      background: color,
       transitionTimingFunction: "ease",
       transitionDuration: `${animationDuration}s`,
-      borderRadius: `${props.borderRadius ?? 0}px`,
+      borderRadius: `${borderRadius ?? 0}px`,
       transformOrigin: "center",
       position: "absolute"
     } as CSSProperties,
     firstLine: {
-      transform: transform3d(open, 0, 45),
+      transform: transform3d(open, "0", 45),
       marginTop: halfStrokeWidth
     } as CSSProperties,
     secondLine: {
@@ -66,7 +74,7 @@ export const BurgerMenu: React.FC<BurgerMenuProps> = props => {
   };
   const { lineBase, firstLine, secondLine, thirdLine } = styles;
   return (
-    <div style={styles.container} onClick={props.onClick}>
+    <div {...props} style={styles.container} onClick={onClick}>
       <span style={{ ...lineBase, ...firstLine }}></span>
       <span style={{ ...lineBase, ...secondLine }}></span>
       <span style={{ ...lineBase, ...thirdLine }}></span>
