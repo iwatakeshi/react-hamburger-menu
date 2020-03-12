@@ -16,37 +16,27 @@
     "url": "https://github.com/cameronbourke/react-hamburger-menu.git"
   },
   "scripts": {
-    "start": "webpack-dev-server --content-base example/",
-    "build:compile": "babel src --out-dir dist",
-    "build:umd": "webpack",
-    "build:example": "webpack --config ./example/webpack.config.js --progress --colors",
-    "build:all": "yarn run build:compile && yarn run build:umd && yarn run build:example",
-    "test": "tape ./dist/**/*.spec.js | tap-spec"
+    "prepare": "yarn build",
+    "preversion": "yarn run lint",
+    "prepublishOnly": "yarn test --passWithNoTests",
+    "build": "tsc",
+    "test": "jest test --passWithNoTests --env=jsdom ",
+    "lint": "tslint -p . -t stylish",
+    "lint:fix": "tslint -p . -t stylish --fix"
   },
   "author": "Cameron Bourke <cameron2295@gmail.com> (http://cameronbourke.com/)",
+  "contributors": [
+    "Takeshi Iwana <iwatakeshi@gmail.com>"
+  ],
   "license": "MIT",
   "files": [
-    "dist"
+    "lib/**/*"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.0.0-beta.40",
-    "@babel/core": "^7.0.0-beta.40",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0-beta.40",
-    "@babel/preset-env": "^7.0.0-beta.40",
-    "@babel/preset-react": "^7.0.0-beta.40",
-    "babel-loader": "8.0.0-beta.0",
-    "babel-register": "^6.26.0",
-    "expect": "1.13.4",
-    "prop-types": "15.5.7",
-    "react": "15.3.0",
-    "react-dom": "15.3.0",
-    "tap-spec": "4.1.1",
-    "tape": "4.4.0",
-    "webpack": "^3.11.0",
-    "webpack-dev-server": "^2.11.1"
+    "@types/react": "^16.9.23",
+    "react": "16.13.0",
+    "react-dom": "16.13.0",
+    "typescript": "^3.8.3"
   },
-  "peerDependencies": {
-    "prop-types": ">=15.5.7",
-    "react": ">=15.3.0"
-  }
+  "dependencies": {}
 }
