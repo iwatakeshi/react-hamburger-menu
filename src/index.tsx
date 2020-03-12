@@ -12,7 +12,7 @@ interface BurgerMenuProps extends HTMLAttributes<HTMLDivElement> {
   rotation?: number;
   animationDuration?: number;
   color?: string;
-  borderRadius: number;
+  borderRadius?: number;
   onClick?: OnBurgerMenuClickEvent;
 }
 
